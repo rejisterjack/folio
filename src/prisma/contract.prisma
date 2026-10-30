@@ -1,0 +1,86 @@
+// use prisma-8
+
+enum Environment {
+  development = "development"
+  staging     = "staging"
+  production  = "production"
+}
+
+model User {
+  id           String        @id @onCreate(uuid())
+  email        String        @unique
+  passwordHash String
+  name         String
+  createdAt    TimestamptzString @default(now())
+  apiKeys      ApiKey[]
+  auditEvents  AuditEvent[]
+  promptVersions PromptVersion[]
+}
+
+model ApiKey {
+  id        String             @id @onCreate(uuid())
+  name      String
+  prefix    String
+  keyHash   String             @unique
+  userId    String
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt TimestamptzString  @default(now())
+  revokedAt TimestamptzString?
+
+  @@index([userId])
+}
+
+model Prompt {
+  id          String            @id @onCreate(uuid())
+  key         String            @unique
+  name        String
+  description String            @default("")
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.UpdatedAtString
+  versions    PromptVersion[]
+  deployments PromptDeployment[]
+}
+
+model PromptVersion {
+  id        String            @id @onCreate(uuid())
+  promptId  String
+  prompt    Prompt            @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  version   Int
+  content   String
+  message   String            @default("")
+  authorId  String?
+  author    User?             @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  createdAt TimestamptzString @default(now())
+  deployments PromptDeployment[]
+
+  @@unique([promptId, version])
+  @@index([promptId])
+}
+
+model PromptDeployment {
+  id        String            @id @onCreate(uuid())
+  promptId  String
+  prompt    Prompt            @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  versionId String
+  version   PromptVersion     @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  env       Environment
+  createdAt TimestamptzString @default(now())
+
+  @@unique([promptId, env])
+  @@index([promptId])
+}
+
+model AuditEvent {
+  id         String            @id @onCreate(uuid())
+  actorId    String?
+  actor      User?             @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  actorEmail String
+  action     String
+  promptKey  String
+  before     Jsonb?
+  after      Jsonb?
+  createdAt  TimestamptzString @default(now())
+
+  @@index([promptKey, createdAt])
+  @@index([createdAt])
+}
