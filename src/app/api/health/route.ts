@@ -1,3 +1,13 @@
+import { db } from "@/prisma/db";
+import { json } from "@/lib/http";
+
 export async function GET() {
-  return Response.json({ ok: true, service: "folio" });
+  try {
+    const plan = db.raw.sql`SELECT 1 AS ok`.returnsRow({ ok: "pg/int4@1" }).build();
+    await db.query(plan);
+    return json({ ok: true, service: "folio" });
+  } catch (error) {
+    console.error(error);
+    return json({ ok: false, service: "folio" }, 503);
+  }
 }

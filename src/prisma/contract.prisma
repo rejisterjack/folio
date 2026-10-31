@@ -12,9 +12,21 @@ model User {
   passwordHash String
   name         String
   createdAt    TimestamptzString @default(now())
+  sessions     Session[]
   apiKeys      ApiKey[]
   auditEvents  AuditEvent[]
   promptVersions PromptVersion[]
+}
+
+model Session {
+  id        String            @id @onCreate(uuid())
+  tokenHash String            @unique
+  userId    String
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt TimestamptzString
+  createdAt TimestamptzString @default(now())
+
+  @@index([userId])
 }
 
 model ApiKey {
