@@ -7,12 +7,14 @@ export type Actor = {
   id: string;
   email: string;
   name: string;
+  role: "admin" | "member";
 };
 
 type UserRow = {
   id: string;
   email: string;
   name: string;
+  role: string;
 };
 
 export function toActor(user: UserRow): Actor {
@@ -20,6 +22,7 @@ export function toActor(user: UserRow): Actor {
     id: user.id,
     email: user.email,
     name: user.name,
+    role: user.role === "admin" ? "admin" : "member",
   };
 }
 
@@ -43,6 +46,12 @@ export async function actorFromRequest(request: Request): Promise<Actor | null> 
 export async function requireActor(request: Request): Promise<Actor> {
   const actor = await actorFromRequest(request);
   if (!actor) throw new HttpError(401, "Sign in required");
+  return actor;
+}
+
+export async function requireAdmin(request: Request): Promise<Actor> {
+  const actor = await requireActor(request);
+  if (actor.role !== "admin") throw new HttpError(403, "Admin access required");
   return actor;
 }
 

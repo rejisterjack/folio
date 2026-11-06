@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'9aac6d8c1f1d3c34db84d9e1de31d8d450632434b563cc268e6c1cdb02187841'>;
+  StorageHashBase<'3045ad0db7b18fb75e4c92be611ad3ceaf79ffb68eb141adeea1a4ddf0cffc6e'>;
 export type ExecutionHash =
   ExecutionHashBase<'ba6bb311be8dca7725c834a25f71e14a4733cc879528702fe2eb89d7bce75011'>;
 export type ProfileHash =
@@ -279,6 +279,9 @@ type FieldTypeOverrides = {
           readonly input: 'development' | 'staging' | 'production';
         };
       };
+      readonly User: {
+        readonly role: { readonly output: 'admin' | 'member'; readonly input: 'admin' | 'member' };
+      };
     };
   };
 };
@@ -303,6 +306,9 @@ type ColumnTypeOverrides = {
         readonly output: 'development' | 'staging' | 'production';
         readonly input: 'development' | 'staging' | 'production';
       };
+    };
+    readonly User: {
+      readonly role: { readonly output: 'admin' | 'member'; readonly input: 'admin' | 'member' };
     };
   };
 };
@@ -394,6 +400,7 @@ export namespace Models {
     id: FieldOutputTypes['public']['User']['id'];
     name: FieldOutputTypes['public']['User']['name'];
     passwordHash: FieldOutputTypes['public']['User']['passwordHash'];
+    role: FieldOutputTypes['public']['User']['role'];
     apiKeys: public_ApiKey[];
     auditEvents: public_AuditEvent[];
     promptVersions: public_PromptVersion[];
@@ -903,6 +910,16 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly many: false;
                 };
+                readonly role: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'member'>;
+                  };
+                  readonly many: false;
+                };
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [{ readonly columns: readonly ['email'] }];
@@ -914,6 +931,10 @@ type ContractBase = Omit<
             readonly Environment: {
               readonly kind: 'valueSet';
               readonly values: readonly ['development', 'staging', 'production'];
+            };
+            readonly Role: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['admin', 'member'];
             };
           };
         };
@@ -1366,6 +1387,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly role: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
             };
             readonly relations: {
               readonly apiKeys: {
@@ -1422,6 +1447,7 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly name: { readonly column: 'name' };
                 readonly passwordHash: { readonly column: 'passwordHash' };
+                readonly role: { readonly column: 'role' };
               };
             };
           };
@@ -1435,12 +1461,23 @@ type ContractBase = Omit<
               { readonly name: 'production'; readonly value: 'production' },
             ];
           };
+          readonly Role: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'admin'; readonly value: 'admin' },
+              { readonly name: 'member'; readonly value: 'member' },
+            ];
+          };
         };
         readonly enumMemberTypes?: {
           readonly Environment: readonly [
             { readonly name: 'development'; readonly value: 'development' },
             { readonly name: 'staging'; readonly value: 'staging' },
             { readonly name: 'production'; readonly value: 'production' },
+          ];
+          readonly Role: readonly [
+            { readonly name: 'admin'; readonly value: 'admin' },
+            { readonly name: 'member'; readonly value: 'member' },
           ];
         };
       };

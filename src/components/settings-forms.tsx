@@ -65,3 +65,84 @@ export function RevokeKeyButton({ id }: { id: string }) {
     </button>
   );
 }
+
+export function CreateUserForm() {
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+
+  return (
+    <form
+      className="grid gap-3 sm:grid-cols-2"
+      onSubmit={async (event) => {
+        event.preventDefault();
+        const formElement = event.currentTarget;
+        const form = new FormData(formElement);
+        setError(null);
+        try {
+          await callApi("/api/users", {
+            method: "POST",
+            body: JSON.stringify({
+              name: form.get("name"),
+              email: form.get("email"),
+              password: form.get("password"),
+              role: form.get("role"),
+            }),
+          });
+          formElement.reset();
+          router.refresh();
+        } catch (caught) {
+          setError(caught instanceof Error ? caught.message : "Could not add the teammate");
+        }
+      }}
+    >
+      <input required name="name" placeholder="Name" className="h-11 rounded-md border border-line bg-card px-3" />
+      <input
+        required
+        name="email"
+        type="email"
+        placeholder="Email"
+        className="h-11 rounded-md border border-line bg-card px-3"
+      />
+      <input
+        required
+        name="password"
+        type="password"
+        placeholder="Password"
+        className="h-11 rounded-md border border-line bg-card px-3"
+      />
+      <select name="role" className="h-11 rounded-md border border-line bg-card px-3">
+        <option value="member">Member</option>
+        <option value="admin">Admin</option>
+      </select>
+      <button type="submit" className="h-11 rounded-md bg-accent px-4 text-sm font-medium text-accent-ink sm:col-span-2">
+        Add teammate
+      </button>
+      {error ? <p className="text-sm text-bad sm:col-span-2">{error}</p> : null}
+    </form>
+  );
+}
+
+export function RemoveUserButton({ id }: { id: string }) {
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  return (
+    <span className="flex items-center gap-3">
+      <button
+        type="button"
+        className="text-sm text-bad"
+        onClick={async () => {
+          setError(null);
+          try {
+            await callApi(`/api/users/${id}`, { method: "DELETE" });
+            router.refresh();
+          } catch (caught) {
+            setError(caught instanceof Error ? caught.message : "Could not remove teammate");
+          }
+        }}
+      >
+        Remove
+      </button>
+      {error ? <span className="text-xs text-bad">{error}</span> : null}
+    </span>
+  );
+}

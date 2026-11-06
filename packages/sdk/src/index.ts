@@ -8,9 +8,13 @@ export type FolioOptions = {
   fetch?: typeof fetch;
 };
 
-type CacheEntry = {
+export type FolioPrompt = {
   content: string;
   version: number;
+  env: FolioEnvironment;
+};
+
+type CacheEntry = FolioPrompt & {
   expiresAt: number;
 };
 
@@ -32,15 +36,26 @@ export class Folio {
     this.fetchImpl = options.fetch ?? globalThis.fetch;
   }
 
+  /** Returns prompt content only (compat). Prefer `getPrompt` when you need version/env. */
   async get(
     prompt: string,
     options?: { env?: FolioEnvironment },
   ): Promise<string> {
+    const result = await this.getPrompt(prompt, options);
+    return result.content;
+  }
+
+  async getPrompt(
+    prompt: string,
+    options?: { env?: FolioEnvironment },
+  ): Promise<FolioPrompt> {
     const env = options?.env ?? "production";
     const cacheKey = `${prompt}\n${env}`;
     if (this.cacheTtlMs > 0) {
       const hit = this.cache.get(cacheKey);
-      if (hit && hit.expiresAt > Date.now()) return hit.content;
+      if (hit && hit.expiresAt > Date.now()) {
+        return { content: hit.content, version: hit.version, env: hit.env };
+      }
     }
 
     const url = new URL(`${this.baseUrl}/api/v1/prompts/${encodeURIComponent(prompt)}`);
@@ -57,18 +72,26 @@ export class Folio {
     const body = (await response.json()) as {
       content?: unknown;
       version?: unknown;
+      env?: unknown;
     };
     if (typeof body.content !== "string") {
       throw new Error("Folio get returned an unexpected payload");
     }
 
+    const result: FolioPrompt = {
+      content: body.content,
+      version: typeof body.version === "number" ? body.version : 0,
+      env: body.env === "development" || body.env === "staging" || body.env === "production"
+        ? body.env
+        : env,
+    };
+
     if (this.cacheTtlMs > 0) {
       this.cache.set(cacheKey, {
-        content: body.content,
-        version: typeof body.version === "number" ? body.version : 0,
+        ...result,
         expiresAt: Date.now() + this.cacheTtlMs,
       });
     }
-    return body.content;
+    return result;
   }
 }

@@ -9,6 +9,7 @@ const links = [
   { href: "/prompts", label: "Prompts" },
   { href: "/audit", label: "Audit" },
   { href: "/settings/keys", label: "API keys" },
+  { href: "/settings/team", label: "Team" },
 ];
 
 export async function AuthedShell({ children }: { children: React.ReactNode }) {
