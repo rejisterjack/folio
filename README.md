@@ -4,7 +4,9 @@ Self-hostable prompt version control.
 
 > Git for your prompts. Deploy them like code. Roll back in one click.
 
-**Home:** [folio.rejisterjack.com](https://folio.rejisterjack.com) · **SDK:** `@rejisterjack/folio`
+**Home:** [folio.rejisterjack.com](https://folio.rejisterjack.com) · **SDK:** [`@rejisterjack/folio`](https://www.npmjs.com/package/@rejisterjack/folio)
+
+The reference deployment is https://folio.rejisterjack.com. That instance is private: sign in with your own admin account, and do not put production API keys from other apps into a shared demo. Self-host with the Deploy button below.
 
 ## Deploy
 

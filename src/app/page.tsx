@@ -35,7 +35,7 @@ export default function Home() {
             Deploy to Vercel
           </a>
           <a
-            href="/setup"
+            href="/login"
             className="inline-flex h-11 items-center rounded-md border border-line px-4 text-sm font-medium"
           >
             Open dashboard
