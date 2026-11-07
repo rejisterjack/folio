@@ -34,6 +34,7 @@ export async function setupAccount(input: {
         email: input.email,
         passwordHash,
         name: input.name,
+        role: "admin",
       });
       const token = randomToken();
       await tx.orm.public.Session.create({

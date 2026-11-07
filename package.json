@@ -11,6 +11,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit && tsc -p packages/sdk --noEmit",
+    "test": "tsx --test src/lib/diff.test.ts packages/sdk/src/index.test.ts",
     "sdk:build": "npm run build -w @rejisterjack/folio",
     "contract:emit": "prisma contract emit",
     "postinstall": "prisma contract emit"

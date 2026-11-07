@@ -53,6 +53,19 @@
                 "value": "production"
               }
             ]
+          },
+          "Role": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "admin",
+                "value": "admin"
+              },
+              {
+                "name": "member",
+                "value": "member"
+              }
+            ]
           }
         },
         "models": {
@@ -707,6 +720,19 @@
                   "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
+              },
+              "role": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "Role",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
               }
             },
             "relations": {
@@ -787,6 +813,9 @@
                 },
                 "passwordHash": {
                   "column": "passwordHash"
+                },
+                "role": {
+                  "column": "role"
                 }
               },
               "namespaceId": "public",
@@ -1365,6 +1394,13 @@
               ]
             },
             "User": {
+              "checks": [
+                {
+                  "expression": "\"role\" IN ('admin', 'member')",
+                  "name": "User_role_check_db2a8df6",
+                  "prefix": "User_role_check"
+                }
+              ],
               "columns": {
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
@@ -1394,6 +1430,21 @@
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": false
+                },
+                "role": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "default": {
+                    "kind": "literal",
+                    "value": "member"
+                  },
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "Role",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 }
               },
               "foreignKeys": [],
@@ -1420,6 +1471,13 @@
                 "staging",
                 "production"
               ]
+            },
+            "Role": {
+              "kind": "valueSet",
+              "values": [
+                "admin",
+                "member"
+              ]
             }
           }
         },
@@ -1427,7 +1485,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "9aac6d8c1f1d3c34db84d9e1de31d8d450632434b563cc268e6c1cdb02187841"
+    "storageHash": "3045ad0db7b18fb75e4c92be611ad3ceaf79ffb68eb141adeea1a4ddf0cffc6e"
   },
   "execution": {
     "executionHash": "ba6bb311be8dca7725c834a25f71e14a4733cc879528702fe2eb89d7bce75011",

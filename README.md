@@ -4,7 +4,9 @@ Self-hostable prompt version control.
 
 > Git for your prompts. Deploy them like code. Roll back in one click.
 
-**Home:** [folio.rejisterjack.com](https://folio.rejisterjack.com) · **SDK:** `@rejisterjack/folio`
+**Home:** [folio.rejisterjack.com](https://folio.rejisterjack.com) · **SDK:** [`@rejisterjack/folio`](https://www.npmjs.com/package/@rejisterjack/folio)
+
+The reference deployment is https://folio.rejisterjack.com. That instance is private: sign in with your own admin account, and do not put production API keys from other apps into a shared demo. Self-host with the Deploy button below.
 
 ## Deploy
 
@@ -30,7 +32,14 @@ const folio = new Folio({
 });
 
 const prompt = await folio.get("my-prompt", { env: "production" });
+// string content for compat
+
+const { content, version, env } = await folio.getPrompt("my-prompt", {
+  env: "production",
+});
 ```
+
+`get()` returns the prompt string. `getPrompt()` returns `{ content, version, env }` when you need metadata.
 
 Keep the API key on the server. Do not ship it to a browser.
 
@@ -70,4 +79,4 @@ npm run sdk:build
 
 ## Status
 
-Working prompt registry: versions, per-environment deploys, one-click rollback, side-by-side diff, audit log, Bearer-authenticated runtime fetch, and `@rejisterjack/folio` SDK with in-memory caching.
+Working prompt registry: versions, per-environment deploys, one-click rollback, side-by-side diff, audit log, admin/member team roles, Bearer-authenticated runtime fetch, and `@rejisterjack/folio` SDK with `get` / `getPrompt` and in-memory caching.

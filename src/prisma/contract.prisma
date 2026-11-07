@@ -1,5 +1,10 @@
 // use prisma-8
 
+enum Role {
+  admin  = "admin"
+  member = "member"
+}
+
 enum Environment {
   development = "development"
   staging     = "staging"
@@ -11,6 +16,7 @@ model User {
   email        String        @unique
   passwordHash String
   name         String
+  role         Role          @default(member)
   createdAt    TimestamptzString @default(now())
   sessions     Session[]
   apiKeys      ApiKey[]

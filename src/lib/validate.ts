@@ -79,3 +79,9 @@ export function parseOptionalVersionNumber(value: unknown): number | undefined {
   if (value === undefined || value === null || value === "") return undefined;
   return parseVersionNumber(value);
 }
+
+export function parseRole(value: unknown): "admin" | "member" {
+  if (value === undefined || value === "member") return "member";
+  if (value === "admin") return "admin";
+  throw new HttpError(400, "Role must be admin or member");
+}
