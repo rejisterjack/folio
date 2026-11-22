@@ -77,6 +77,12 @@ npm run sdk:build
 - TypeScript SDK in `packages/sdk`
 - Tailwind CSS
 
+## CI/CD
+
+Workflows run only on a push to `main`. A pull request, any other branch, a tag push, a schedule, and a manual run do not start CI or CD. The only deploy target is production. Vercel builds only when the git ref is `main`.
+
+A production SDK publish runs on that same push when the commit subject is `release: sdk-v` plus the version in `packages/sdk/package.json` (`release: sdk-v1.2.3`). Any other push to `main` runs checks only. Pushing a tag does not start a workflow.
+
 ## Status
 
 Working prompt registry: versions, per-environment deploys, one-click rollback, side-by-side diff, audit log, admin/member team roles, Bearer-authenticated runtime fetch, and `@rejisterjack/folio` SDK with `get` / `getPrompt` and in-memory caching.

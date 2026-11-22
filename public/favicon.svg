@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <radialGradient id="fo-bg" cx="50%" cy="30%" r="80%">
+      <stop offset="0%" stop-color="#261b14" />
+      <stop offset="60%" stop-color="#120d09" />
+      <stop offset="100%" stop-color="#080503" />
+    </radialGradient>
+    <linearGradient id="fo-stroke" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="rgba(249, 115, 22, 0.55)" />
+      <stop offset="50%" stop-color="rgba(245, 158, 11, 0.2)" />
+      <stop offset="100%" stop-color="rgba(249, 115, 22, 0.08)" />
+    </linearGradient>
+    <linearGradient id="fo-leaf" x1="140" y1="120" x2="380" y2="380" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fdba74" />
+      <stop offset="50%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+    <filter id="fo-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="14" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <rect x="24" y="24" width="464" height="464" rx="112" fill="url(#fo-bg)" stroke="url(#fo-stroke)" stroke-width="6" />
+  <circle cx="256" cy="256" r="130" fill="#f97316" opacity="0.12" filter="url(#fo-glow)" />
+
+  <g transform="translate(0, -6)">
+    <!-- Base Layer (Prompt v1.0) -->
+    <rect x="180" y="100" width="180" height="230" rx="16" fill="#1e140d" stroke="#7c2d12" stroke-width="8" transform="rotate(-12 180 100)" />
+    <!-- Middle Layer (Prompt v1.1 Diff) -->
+    <rect x="160" y="120" width="180" height="230" rx="16" fill="#2d1d12" stroke="#c2410c" stroke-width="8" transform="rotate(-4 160 120)" />
+    <!-- Top Active Head Leaf (Current Prompt Commit) -->
+    <rect x="156" y="140" width="188" height="240" rx="16" fill="#381e0f" stroke="url(#fo-leaf)" stroke-width="10" transform="rotate(4 156 140)" />
+
+    <!-- Prompt Diff Syntax Lines -->
+    <g transform="rotate(4 156 140)">
+      <line x1="184" y1="180" x2="250" y2="180" stroke="#fed7aa" stroke-width="8" stroke-linecap="round" />
+      <line x1="184" y1="210" x2="310" y2="210" stroke="#f97316" stroke-width="8" stroke-linecap="round" />
+      <line x1="184" y1="240" x2="280" y2="240" stroke="#ea580c" stroke-width="8" stroke-linecap="round" />
+      <line x1="184" y1="270" x2="320" y2="270" stroke="#fdba74" stroke-width="8" stroke-linecap="round" />
+      <!-- Version Commit Node -->
+      <circle cx="300" cy="330" r="14" fill="#fbbf24" filter="url(#fo-glow)" />
+    </g>
+  </g>
+</svg>
